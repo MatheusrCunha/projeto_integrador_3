@@ -18,8 +18,7 @@ Toda a parte microcontrolada será feita utilizando o módulo ESP32, que possui 
 # Módulos Escolhidos
 
 |    Módulos       |  Quantidade   |
-| -------------    | ------------- |
-|      :---:       |      :---:    |
+| -------------    | ------------- |    
 | Display LCD 16x2 |       1       |
 |     Esp32        |       1       |
 |  Servo Motor     |       1       |
@@ -31,8 +30,7 @@ Toda a parte microcontrolada será feita utilizando o módulo ESP32, que possui 
 
 
 |    Módulos       |     Tensão    |
-| -------------    | ------------- |
-|      :---:       |      :---:    |
+| -------------    | ------------- |      
 | Display LCD 16x2 |      5V       |
 |     Esp32        |   5V ou 3,3V  |
 |  Servo Motor     |       5V      |
