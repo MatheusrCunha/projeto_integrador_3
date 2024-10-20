@@ -7,10 +7,10 @@ Muitos proprietários de gatos enfrentam dificuldades em manter horários consis
 
 ## Objetivos
 
-Nossa ideia de projeto é desenvolver mecanicamente e eletronicamente um produto cuja finalidade é alimentar gatos automaticamente.
-Na parte eletrônica, vamos desenvolver um produto que seja possível programar até 24 horários de alimentação, permitindo ajustar a quantidade de porções para cada refeição.
-Essa configuração poderá ser feita diretamente pelo produto ou por um aplicativo nosso que desenvolvemos, onde ele se comunicará por wifi com o produto.
-Toda a parte microcontrolada será feita utilizando o módulo ESP32, que possui WIFI integrado. 
+- Nossa ideia de projeto é desenvolver mecanicamente e eletronicamente um produto cuja finalidade é alimentar gatos automaticamente.
+* Na parte eletrônica, vamos desenvolver um produto que seja possível programar até 24 horários de alimentação, permitindo ajustar a quantidade de porções para cada refeição.
++ Essa configuração poderá ser feita diretamente pelo produto ou por um aplicativo nosso que desenvolvemos, onde ele se comunicará por wifi com o produto.
+- O microcontrolador será o módulo ESP32, que possui WIFI integrado. 
 
 ## Desenvolvimento
 
