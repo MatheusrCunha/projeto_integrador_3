@@ -15,8 +15,11 @@ Toda a parte microcontrolada será feita utilizando o módulo ESP32, que possui 
 ## Desenvolvimento
 
 
+# Módulos Escolhidos
+
 |    Módulos       |  Quantidade   |
 | -------------    | ------------- |
+|      :---:       |      :---:    |
 | Display LCD 16x2 |       1       |
 |     Esp32        |       1       |
 |  Servo Motor     |       1       |
@@ -24,8 +27,16 @@ Toda a parte microcontrolada será feita utilizando o módulo ESP32, que possui 
 |Botão touch esp32 |       1       |
 
 
+# Especificação das tensões:
 
 
+|    Módulos       |     Tensão    |
+| -------------    | ------------- |
+|      :---:       |      :---:    |
+| Display LCD 16x2 |      5V       |
+|     Esp32        |   5V ou 3,3V  |
+|  Servo Motor     |       5V      |
+| Fonte de tensão   |     5V/2A    |
 
 
 
