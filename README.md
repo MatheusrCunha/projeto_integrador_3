@@ -16,6 +16,10 @@ Muitos proprietários de gatos enfrentam dificuldades em manter horários consis
 
 ## Desenvolvimento
 
+Como base para controlar todo o equipamento, utilizaremos o Modulo ESP32, que possui conectividade WIFI, Pinos capacitivos, interface I2C e módulo interno RTC que são pré requisitos 
+para funcionamento do alimentador automático de gatos.
+Para interface visual, utilizaremos o display LCD 16x2 - 1602A com placa interface I2C para display, para diminuir a quantidade de pinos de comunicação com o módulo ESP32. 
+Nesse formato, precisamos apenas de 2 pinos digitais e 2 de alimentação.
 
 # Módulos Escolhidos
 
