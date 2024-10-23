@@ -31,7 +31,7 @@ Muitos proprietários de gatos enfrentam dificuldades em manter horários consis
 # Especificação das tensões:
 
 
-|    Módulos       |     Tensão    |
+|    Módulos       |     Tensão de Operação    |
 | -------------    | ------------- |      
 | Display LCD 16x2 |      5V       |
 |     ESP32        |   5V ou 3,3V  |
