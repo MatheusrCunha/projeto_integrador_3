@@ -42,4 +42,11 @@ Muitos proprietários de gatos enfrentam dificuldades em manter horários consis
 
 ## Referências
 
+A2ROBOTICS. **Display LCD 16x2**. [S.d]. Disponível em:
+https://www.a2robotics.com.br/display-lcd-16x2-azul-com-i2c-acoplado?utm_source=Site&utm_medium. Acesso em: 16 mar. 2024.
 
+MAKERHERO. **Servo motor 6221mg**. [S.d]. Disponível em:
+https://www.makerhero.com/produto/servo-jx-pdi-6221mg-alto-torque-20kg/. Acesso em: 16 mar. 2024.
+
+FRANZININHO. **Exemplos ESPIDF**. [S.d]. Disponível em:
+https://docs.franzininho.com.br/docs/franzininho-wifi/exemplos-espidf/primeiros-passos. Acesso em: 21 mar. 2024.
