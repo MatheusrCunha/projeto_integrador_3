@@ -1,5 +1,5 @@
 # Projeto Integrador 3
-Alunos: Matheus Cunha e Ueslei Marian 
+Alunos: Matheus Rodrigues Cunha e Ueslei Marian 
 
 Engenharia Eletrônica 2024/2
 ## Introdução
