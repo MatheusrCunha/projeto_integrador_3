@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/mathe/workspace/i2c_simple/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/mathe/workspace/i2c_simple/main/i2c_simple_main.c" ],
+            "sources": [ "C:/Users/mathe/workspace/i2c_simple/main/i2c_simple_main.c", "C:/Users/mathe/workspace/i2c_simple/main/i2c-lcd.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

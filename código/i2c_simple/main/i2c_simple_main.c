@@ -4,6 +4,8 @@
    as well as reading and writing from and to registers for a sensor connected over I2C.
 
    The sensor used in this example is a MPU9250 inertial measurement unit.
+   
+   
 
    For other examples please check:
    https://github.com/espressif/esp-idf/tree/master/examples
@@ -19,15 +21,15 @@
 #include <stdio.h>
 #include "esp_log.h"
 #include "driver/i2c.h"
+#include "hal/i2c_types.h"
 #include "soc/gpio_num.h"
+#include "i2c-lcd.h"
 
 static const char *TAG = "i2c-simple-example";
 
- * @brief i2c master initialization
- */
 static esp_err_t i2c_master_init(void)
 {
-    int i2c_master_port = I2C_MASTER_NUM;
+    int i2c_master_port = I2C_NUM_0;
 
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
@@ -40,13 +42,19 @@ static esp_err_t i2c_master_init(void)
 
     i2c_param_config(i2c_master_port, &conf);
 
-    return i2c_driver_install(i2c_master_port, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+    return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
 }
 
 void app_main(void)
 {
-    uint8_t data[2];
+	
     ESP_ERROR_CHECK(i2c_master_init());
     ESP_LOGI(TAG, "I2C initialized successfully");
+    
+    lcd_init();
+    
+    lcd_put_cur(0, 0);
+    
+    lcd_send_string("Hello World");
 
 }
