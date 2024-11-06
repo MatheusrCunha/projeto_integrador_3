@@ -4,9 +4,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-//Para funcionar a saida SERIAL
-#include "driver/uart.h"
-
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -15,30 +12,6 @@
 #define LED GPIO_NUM_2
 
 struct tm data;//Cria a estrutura que contem as informacoes da data.
-
-
-// Configuração da UART
-#define BUF_SIZE (1024)
-
-void uart_init() {
-    const uart_port_t uart_num = UART_NUM_1;
-    const int baud_rate = 115200;
-
-    // Configura a UART
-    uart_config_t uart_config = {
-        .baud_rate = baud_rate,
-        .data_bits = UART_DATA_8_BITS,
-        .parity = UART_PARITY_DISABLE,
-        .stop_bits = UART_STOP_BITS_1,
-        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-    };
-
-    uart_driver_install(uart_num, BUF_SIZE * 2, 0, 0, NULL, 0);
-    uart_param_config(uart_num, &uart_config);
-    uart_set_pin(uart_num, 17, 16, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE); // Pinos TX e RX
-}
-
-
 
 
 void app_main() {
@@ -64,21 +37,18 @@ void app_main() {
     vTaskDelay(pdMS_TO_TICKS(1000));//Espera 1 seg
 
 
-    time_t tt = time(NULL);//Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
+    time_t tt = time(NULL);//Obtem o tempo atual em segundos.
     data = *gmtime(&tt);//Converte o tempo atual e atribui na estrutura
 
     
     char data_formatada[64];
     strftime(data_formatada, 64, "%d/%m/%Y %H:%M:%S", &data);//Cria uma String formatada da estrutura "data"
 
-    //time_t tt = time(NULL); // Obtem o tempo atual em segundos
-    printf("\nUnix Time: %ld\n", (long)tt); // Use %ld para time_t
-
-    //printf("\nUnix Time: %d\n", int32_t(tt));//Mostra na Serial o Unix time
+    printf("\nUnix Time: %ld\n", (long)tt); // Mostra na Serial o Unix time.
     printf("Data formatada: %s\n", data_formatada);//Mostra na Serial a data formatada
 
 
-	
+	//Fica ligando e desligando o led da placa a cada 1 segundo só para ver que o firmware está rodando
 	if(var == 0 )
 	{
 		printf("LED ligado!\n");
@@ -92,32 +62,6 @@ void app_main() {
     	var=0;
 	}
 	
-	// Leitura da UART
-    uint8_t data[BUF_SIZE];
-    int len = uart_read_bytes(UART_NUM_1, data, BUF_SIZE, 100 / portTICK_PERIOD_MS);
-    if (len > 0) {
-        // Lê o comando enviado pela serial
-        timestamp = (int)data[0]; // Lê o primeiro byte recebido
-        tv.tv_sec = timestamp; // Atualiza valor da hora (em Unix) pela serial
-        settimeofday(&tv, NULL); // Configura o horário
-       // printf("Timestamp atualizado: %ld\n", tv.tv_sec);
-    }
-	
-
-
-    /*
-      Com o Unix time, podemos facilmente controlar acoes do MCU por data, visto que utilizaremos os segundos
-      e sao faceis de usar em IFs
-
-      Voce pode criar uma estrutura com a data desejada e depois converter para segundos (inverso do que foi feito acima)
-      caso deseje trabalhar para atuar em certas datas e horarios
-
-      No exemplo abaixo, o MCU ira printar o texto **APENAS** na data e horario (28/02/2019 12:00:05) ate (28/02/2019 12:00:07)
-    */
-    if (tt >= 1730501208 && tt < 1730501215)//Use sua data atual, em segundos, para testar o acionamento por datas e horarios
-    {
-      printf("Acionando carga durante 3 segundos...\n");
-    }
   }
 
   
