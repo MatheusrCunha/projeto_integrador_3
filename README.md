@@ -50,6 +50,10 @@ testamos o LCD, na imagem abaixo temos a conexão utilizada para teste:
 
 ![Tesp32 lcd](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2018/07/esp32_LCD_bb.png?resize=768%2C382&quality=100&strip=all&ssl=1)
 
+No teste do LCD foi utilizado a espressifIDE e o módulo I2c
+
+RTC:
+
 ## Referências
 
 A2ROBOTICS. **Display LCD 16x2**. [S.d]. Disponível em:
