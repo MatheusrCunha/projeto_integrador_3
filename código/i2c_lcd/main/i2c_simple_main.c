@@ -32,7 +32,7 @@ void app_main(void)
     
 	lcd_init(); //inicia lcd
 	
-	lcd_send_string("Hello World"); //envia uma string
+	lcd_send_string("Projeto Integrador 3"); //envia uma string
 	
 	lcd_put_cur(1, 0); //
 }
