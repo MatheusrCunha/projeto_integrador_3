@@ -43,7 +43,22 @@ Na tabela abaixo, temos os módulos que foram escolhidos com suas repectivas ten
 |  Servo Motor     |       5V      |
 | Fonte de tensão   |     5V/2A    |
 
+# Desenvolvimento
 
+Para iniciar o desenvolvimento do projeto é necessário testar alguns módulos e verificar sua funcionalidade, sendo assim, primeiramente 
+testamos o LCD, na imagem abaixo temos a conexão utilizada para teste:
+
+![Tesp32 lcd](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2018/07/esp32_LCD_bb.png?resize=768%2C382&quality=100&strip=all&ssl=1)
+
+No teste do LCD foi utilizado a espressifIDE e o módulo I2c
+
+## Testes do RTC:
+
+Para teste do RTC, utilizamos a RTC interno do ESP32. A seguir temos a parte do código utilizado com as informações do terminal.
+
+![image](https://github.com/user-attachments/assets/fa924aef-d355-4380-bdc1-c7e1af679a0b)
+
+Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE para debugar o código e observar a alteração automática da data. Alem disso, habilitamos o LED da placa para ficar piscando e conseguirmos observar que o firmware está rodando.
 
 ## Referências
 
@@ -55,3 +70,4 @@ https://www.makerhero.com/produto/servo-jx-pdi-6221mg-alto-torque-20kg/. Acesso 
 
 FRANZININHO. **Exemplos ESPIDF**. [S.d]. Disponível em:
 https://docs.franzininho.com.br/docs/franzininho-wifi/exemplos-espidf/primeiros-passos. Acesso em: 21 mar. 2024.
+https://randomnerdtutorials.com/esp32-esp8266-i2c-lcd-arduino-ide/
