@@ -60,6 +60,12 @@ Para teste do RTC, utilizamos a RTC interno do ESP32. A seguir temos a parte do 
 
 Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE para debugar o código e observar a alteração automática da data. Alem disso, habilitamos o LED da placa para ficar piscando e conseguirmos observar que o firmware está rodando.
 
+## Modelagem 3D
+
+Os documentos da modelagem do funil e dosador estão na pasta arquivo modelagem 3d. Nessa pasta também se encotra os arquivos com as medidas de cada parte modelada
+
+![image](https://github.com/user-attachments/assets/be1bccc2-c6dc-48cd-971c-09f627c5b971)
+
 ## Referências
 
 A2ROBOTICS. **Display LCD 16x2**. [S.d]. Disponível em:
