@@ -52,7 +52,13 @@ testamos o LCD, na imagem abaixo temos a conexão utilizada para teste:
 
 No teste do LCD foi utilizado a espressifIDE e o módulo I2c
 
-RTC:
+## Testes do RTC:
+
+Para teste do RTC, utilizamos a RTC interno do ESP32. A seguir temos a parte do código utilizado com as informações do terminal.
+
+![image](https://github.com/user-attachments/assets/fa924aef-d355-4380-bdc1-c7e1af679a0b)
+
+Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE para debugar o código e observar a alteração automática da data. Alem disso, habilitamos o LED da placa para ficar piscando e conseguirmos observar que o firmware está rodando.
 
 ## Referências
 
