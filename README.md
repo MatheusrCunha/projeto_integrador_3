@@ -43,7 +43,12 @@ Na tabela abaixo, temos os módulos que foram escolhidos com suas repectivas ten
 |  Servo Motor     |       5V      |
 | Fonte de tensão   |     5V/2A    |
 
+# Desenvolvimento
 
+Para iniciar o desenvolvimento do projeto é necessário testar alguns módulos e verificar sua funcionalidade, sendo assim, primeiramente 
+testamos o LCD, na imagem abaixo temos a conexão utilizada para teste:
+
+![Tesp32 lcd](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2018/07/esp32_LCD_bb.png?resize=768%2C382&quality=100&strip=all&ssl=1)
 
 ## Referências
 
@@ -55,3 +60,4 @@ https://www.makerhero.com/produto/servo-jx-pdi-6221mg-alto-torque-20kg/. Acesso 
 
 FRANZININHO. **Exemplos ESPIDF**. [S.d]. Disponível em:
 https://docs.franzininho.com.br/docs/franzininho-wifi/exemplos-espidf/primeiros-passos. Acesso em: 21 mar. 2024.
+https://randomnerdtutorials.com/esp32-esp8266-i2c-lcd-arduino-ide/
