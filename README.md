@@ -78,6 +78,7 @@ Quando o botão Programar alimentação é pressionando é possível acessar a s
 
 ![image](https://github.com/user-attachments/assets/002252fc-1358-48a8-8e58-e29e334a72ac)
 
+Também teremos uma terceira tela que apresentaremos algumas informações.
 
 ## Modelagem 3D
 
