@@ -60,6 +60,25 @@ Para teste do RTC, utilizamos a RTC interno do ESP32. A seguir temos a parte do 
 
 Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE para debugar o código e observar a alteração automática da data. Alem disso, habilitamos o LED da placa para ficar piscando e conseguirmos observar que o firmware está rodando.
 
+## Teste Servo Motor:
+
+## Teste Botão Capacitivo:
+
+## Placa Controladora
+
+## Desenvolvimento do Aplicativo
+
+Para configurar as 24 programações de alimentação por dia vai ser desenvolvido um aplicativo com conectividade via WiFi no APP Inventor2.
+Inicialmente começamos desenvolvendo a interface de botões e a troca de tela no aplicativo, a lógica de horário também foi iniciada.
+A tela incial do aplicativo foi desenvolvida, essa tela é apresentada em seguida:
+
+![image](https://github.com/user-attachments/assets/d03d6f60-30dd-40ad-939e-59862e7cc662)
+
+Quando o botão Programar alimentação é pressionando é possível acessar a segunda tela, essa é a tela que vamos programar os horários.
+
+![image](https://github.com/user-attachments/assets/002252fc-1358-48a8-8e58-e29e334a72ac)
+
+
 ## Modelagem 3D
 
 Os documentos da modelagem do funil e dosador estão na pasta arquivo modelagem 3d. Nessa pasta também se encotra os arquivos com as medidas de cada parte modelada
