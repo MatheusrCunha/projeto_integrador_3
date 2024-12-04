@@ -77,11 +77,11 @@ A esquerda podemos ver os valores próximo de 1022 quando p botão não está se
 
 ## Placa Controladora
 
-O desenvolvimento inicial do esquemático da placa foi feito usando o aplicativo ALtium Designer. Foi definido inicialmente 3 botões touch, um regulador de tensão e uma saída para o acionamento do servo motor.
+O desenvolvimento inicial do esquemático da placa foi feito usando o aplicativo ALtium Designer. Foi definido inicialmente 3 botões touch, um regulador de tensão e uma saída para o acionamento do servo motor e uma interface do comunicação I2C para o display LCD 16x2.
 
 Segue a imagem do esquemático:
 
-![image](https://github.com/user-attachments/assets/abb1387b-b701-4b9f-bced-3e477c2b5ac6)
+![image](https://github.com/user-attachments/assets/c9fe3c55-fa67-4b4d-a8f2-884d34a2405d)
 
 ## Desenvolvimento do Aplicativo
 
