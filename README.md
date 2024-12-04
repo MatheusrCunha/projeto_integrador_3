@@ -77,6 +77,12 @@ A esquerda podemos ver os valores próximo de 1022 quando p botão não está se
 
 ## Placa Controladora
 
+O desenvolvimento inicial do esquemático da placa foi feito usando o aplicativo ALtium Designer. Foi definido inicialmente 3 botões touch, um regulador de tensão e uma saída para o acionamento do servo motor.
+
+Segue a imagem do esquemático:
+
+![image](https://github.com/user-attachments/assets/abb1387b-b701-4b9f-bced-3e477c2b5ac6)
+
 ## Desenvolvimento do Aplicativo
 
 Para configurar as 24 programações de alimentação por dia vai ser desenvolvido um aplicativo com conectividade via WiFi no APP Inventor2.
