@@ -64,6 +64,17 @@ Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE pa
 
 ## Teste Botão Capacitivo:
 
+Para fazer os testes do touch, iniciamos um projeto de exemplo do próprio Espressif Ide chamado "Touch Pad Read". Com ele, conseguimos fazer a simulação de um botão e verificar a intensidade que ele varia de acordo com a distância do dedo.
+
+Segue o exemplo de como ficaram as funções de testes e o resultado obtido:
+
+![image](https://github.com/user-attachments/assets/ffb6b1b4-247b-428d-b941-3e5481ee1317)
+Assim ficou os dois arquivos (driver_init.c e driver_init.H) de inicialização dos botões touch. Futuramente será utilizado para novas funções mais específicas.
+
+![image](https://github.com/user-attachments/assets/9e960004-7ca9-4f86-9349-5fd4ed8a4580)
+
+A esquerda podemos ver os valores próximo de 1022 quando p botão não está sendo tocado, e na direita temos valores inferiores a 300 quando está sendo tocado.
+
 ## Placa Controladora
 
 ## Desenvolvimento do Aplicativo
