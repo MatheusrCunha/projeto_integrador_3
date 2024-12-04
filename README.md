@@ -62,6 +62,16 @@ Para validar o funcionamento, utilizamos o terminal do próprio Espressif IDE pa
 
 ## Teste Servo Motor:
 
+Iniciamos utilizando o projeto de exemplo existente na própia Espressif Ide, para configurar o servo na Esp Idf é utilizado o periférico LEDC para gerar o sinal PWM. Foi feito o 
+teste em bancada utilizando o ESP32 e o servo motor selecionando anteriormente. 
+No arquivo servo.h temos as definições dos pinos e a escolha do timer.
+
+![image](https://github.com/user-attachments/assets/a8f94612-d772-4b10-8d33-ba35acc880ad)
+
+Temos também a configuração do canal do LEDC
+
+![image](https://github.com/user-attachments/assets/37875a9d-4681-4df3-8e42-a7bb8d78e426)
+
 ## Teste Botão Capacitivo:
 
 Para fazer os testes do touch, iniciamos um projeto de exemplo do próprio Espressif Ide chamado "Touch Pad Read". Com ele, conseguimos fazer a simulação de um botão e verificar a intensidade que ele varia de acordo com a distância do dedo.
