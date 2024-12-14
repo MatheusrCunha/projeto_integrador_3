@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "servo.h"
 #include "driver_init.h"
@@ -10,7 +9,7 @@ void app_main(void) {
 	
 	bool bttouch = false;
 		
-	touch_init();
+	touch_init(); //Inicializa o touch
  
     configure_ledc_timer();
     
