@@ -5,30 +5,34 @@
 #include "driver_init.h"
 #include "defines.h"
 
-void app_main(void) {
-	
+void app_main(void)
+{
+
 	bool bttouch = false;
-		
-	touch_init(); //Inicializa o touch
- 
-    configure_ledc_timer();
-    
-    configure_ledc_channel();
- 
-    //vTaskDelay(1000 / portTICK_PERIOD_MS);
-    
-    while (1) {
-		
+
+	touch_init(); // Inicializa o touch
+
+	configure_ledc_timer();
+
+	configure_ledc_channel();
+
+	// vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+	while (1)
+	{
+
 		bttouch = read_buttons();
-		if (bttouch == 1){
-			moveServo(152); 
-        	vTaskDelay(1000 / portTICK_PERIOD_MS); 
-        	moveServo(57); 
-		}
-		else{
+		if (bttouch == 1)
+		{
+			moveServo(152);
+			vTaskDelay(1000 / portTICK_PERIOD_MS);
 			moveServo(57);
 		}
-		
-		vTaskDelay(100 / portTICK_PERIOD_MS); 
-    }
+		else
+		{
+			moveServo(57);
+		}
+
+		vTaskDelay(100 / portTICK_PERIOD_MS);
+	}
 }
