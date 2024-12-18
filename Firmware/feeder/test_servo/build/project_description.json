@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "hello_world",
-    "project_version":    "71739065-dirty",
+    "project_version":    "38963b48-dirty",
     "project_path":       "D:/projeto_integrador_III/Firmware/feeder/test_servo",
     "idf_path":           "C:/Users/mathe/esp/v5.3.2/esp-idf",
     "build_dir":          "D:/projeto_integrador_III/Firmware/feeder/test_servo/build",
