@@ -1,4 +1,10 @@
 {
-    "idf.portWin": "COM7",
-    "idf.flashType": "UART"
+    "idf.portWin": "COM6",
+    "idf.flashType": "UART",
+    "files.associations": {
+        "**/sigasi.json": "jsonc",
+        "**/.sigasi/**/compilation.log": "shellscript",
+        "**/.sigasi/**/compilation.plan": "json",
+        "servo.h": "c"
+    }
 }

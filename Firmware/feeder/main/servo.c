@@ -44,6 +44,18 @@ void configure_ledc_channel(void) {
     ledc_channel_config(&ledc_channel);
 }
 
+void init_servo(void){
+    configure_ledc_timer();
+	configure_ledc_channel();
+}
+
+
+
+
+
+
+
+ // Funções não usadas por enquanto
 void initServo() {
 	gpio_config_t io_conf = {
         .pin_bit_mask = (1ULL << BT),

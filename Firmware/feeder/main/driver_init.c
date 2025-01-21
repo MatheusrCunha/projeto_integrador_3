@@ -7,39 +7,101 @@
 
 #include "driver_init.h"
 #include <stdbool.h>
+#include "esp_task_wdt.h"
 
 /**
  * Inicializa os pinos dos botões touch
  *
  */
- 
-bool btteste = false;
-uint16_t val;
-uint16_t filtered_value = 0;
+
+const touch_pad_t Num_touch[] = {
+    TOUCH_PAD_NUM4, // GPIO13
+    TOUCH_PAD_NUM6  // GPIO14
+};
+
 uint16_t raw_value_touch = 0;
 
-void touch_init(){
-    touch_pad_init();
+void touch_init() {
+    esp_err_t err;
+
+    // Inicializa o driver dos touch pads
+    err = touch_pad_init();
+    if (err != ESP_OK) {
+        printf("Erro ao inicializar touch_pad: %s\n", esp_err_to_name(err));
+        return;
+    }
+
+    // Configura a tensão dos touch pads
     touch_pad_set_voltage(TOUCH_HVOLT_2V7, TOUCH_LVOLT_0V5, TOUCH_HVOLT_ATTEN_1V);
-    touch_pad_config(TOUCH_PAD_GPIO13_CHANNEL, -1);
+
+    // Configura os touch pads especificados
+    touch_pad_config(TOUCH_PAD_NUM4, -1);
+    touch_pad_config(TOUCH_PAD_NUM6, -1);
+
+    // Inicia o filtro para suavizar as leituras
     touch_pad_filter_start(10);
 }
 
-bool read_buttons(){
-	
-	
-    touch_pad_read_raw_data(TOUCH_PAD_GPIO13_CHANNEL, &raw_value_touch);
-    touch_pad_read_filtered(TOUCH_PAD_GPIO13_CHANNEL, &filtered_value);
-    touch_pad_read(TOUCH_PAD_GPIO13_CHANNEL, &val);
-    
-    printf("val_touch_gpio13 = %d raw_value = %d filtered_value = %d\n", val, raw_value_touch, filtered_value);
-    if (filtered_value < 500){
-		
-		btteste = true;
-		
-	}else {
-		btteste = false;
-	}
-	
-	return btteste;
+bool read_buttons(unsigned char __numTecla) {
+    if (__numTecla >= sizeof(Num_touch) / sizeof(Num_touch[0])) {
+        printf("Erro: índice inválido para __numTecla\n");
+        return false;
+    }
+
+    bool bt_Pressed = false;
+    uint16_t filtered_value = 0;
+
+    // Lê o valor filtrado do touch pad
+    touch_pad_read_filtered(Num_touch[__numTecla], &filtered_value);
+
+    // Verifica se o botão foi pressionado
+    if (filtered_value < 850) {
+        bt_Pressed = true;
+    } else {
+        bt_Pressed = false;
+    }
+
+    return bt_Pressed;
+}
+
+bool btnsPressed[NUM_BTNS] = { false };
+bool debouncing[NUM_BTNS] = { false };
+bool holdingBtn[NUM_BTNS] = { false };
+
+extern volatile uint32_t tickCount; // Contagem de ticks em milissegundos
+uint32_t TickDebounce[NUM_BTNS] = {0};
+
+void sweep_buttons(void) {
+    for (int i = 0; i < NUM_BTNS; i++) {
+        // Verifica se o botão foi pressionado
+        if (read_buttons(i)) {
+            if (!debouncing[i]) {
+                // Inicia debounce para o botão
+                TickDebounce[i] = tickCount;
+                debouncing[i] = true;
+                holdingBtn[i] = true;
+            }
+            // Verifica o tempo de debounce
+            else if (TickStampDelta(TickDebounce[i], tickCount) > DebounceTicks && holdingBtn[i]) {
+                btnsPressed[i] = true;
+                holdingBtn[i] = false; // Permite apenas uma contagem por pressão
+            }
+        } else {
+            // Reseta o estado de debounce se o botão não estiver pressionado
+            debouncing[i] = false;
+        }
+    }
+}
+
+/**
+ * Retorna se um botão foi pressionado
+ * __tecla -> índice do botão a ser verificado
+ */
+bool GetButton(unsigned char __tecla) { 
+    if (btnsPressed[__tecla]) {
+        btnsPressed[__tecla] = false;
+        return true;
+    } else {
+        return false;
+    }
 }

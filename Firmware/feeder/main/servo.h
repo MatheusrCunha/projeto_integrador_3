@@ -15,6 +15,10 @@
 #define LEDC_MODE LEDC_LOW_SPEED_MODE //modo de baixa velocidade
 #define LEDC_FREQUENCY 50 // Frequência PWM
 
+#define START_POSITION 57 //Angulo em que o servo ENCHE o recipiente
+#define END_POSITION 152 //Angulo em que o servo ESVAZIA o recipiente
+
+
 int ServoAngle(int angle);
 
 void moveServo(int angle);
@@ -22,11 +26,12 @@ void moveServo(int angle);
 void configure_ledc_timer(void);
 
 void configure_ledc_channel(void);
+void init_servo(void);
+
 
 void initServo();
-
 void validaServo();
 
-void touchbt();
+//void touchbt();
 
 #endif /* MAIN_SERVO_H_ */
