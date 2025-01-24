@@ -5,6 +5,10 @@
         "**/sigasi.json": "jsonc",
         "**/.sigasi/**/compilation.log": "shellscript",
         "**/.sigasi/**/compilation.plan": "json",
-        "servo.h": "c"
+        "rtc.h": "c",
+        "servo.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c",
+        "defines.h": "c"
     }
 }
