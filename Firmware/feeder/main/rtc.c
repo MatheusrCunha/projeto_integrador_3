@@ -7,10 +7,9 @@
 
 
 #include "rtc.h"
-
+#include "defines.h"
 
 #include <sys/time.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -37,9 +36,10 @@ void init_alarms(void)
 
 void init_rtc(void)
 {
-    struct timeval tv;       // Use 'struct' para definir a estrutura
-    tv.tv_sec = 0; // Atribui um valor à tv_sec
-    settimeofday(&tv, NULL); // Configura o horário
+    set_date(0);// Seta data como 01/01/1970 00:00:00
+    //struct timeval tv;       // Use 'struct' para definir a estrutura
+    //tv.tv_sec = 0; // Atribui um valor à tv_sec
+   // settimeofday(&tv, NULL); // Configura o horário
     init_alarms();
 }
 
@@ -55,6 +55,7 @@ void set_date(int timeval_sec)
     struct timeval tv;       // Use 'struct' para definir a estrutura
     tv.tv_sec = timeval_sec; // Atribui um valor à tv_sec
     settimeofday(&tv, NULL); // Configura o horário
+    
 }
 
 
@@ -67,8 +68,8 @@ void print_date(void)
     char data_formatada[64];
     strftime(data_formatada, 64, "%d/%m/%Y %H:%M:%S", &data); // Cria uma String formatada da estrutura "data"
 
-    printf("\nUnix Time: %ld\n", (long)tt);         // Mostra na Serial o Unix time.
-    printf("Data formatada: %s\n", data_formatada); // Mostra na Serial a data formatada
+    DEBUG_PRINT(("\nUnix Time: %ld\n", (long)tt));         // Mostra na Serial o Unix time.
+    DEBUG_PRINT(("Data formatada: %s\n", data_formatada)); // Mostra na Serial a data formatada
 }
 
 time_t get_time(void)
@@ -108,9 +109,10 @@ const char* insert_alarm(time_t tt)
         if (alarms[i].active &&
             alarms[i].time.tm_hour == alarm_time.tm_hour &&
             alarms[i].time.tm_min == alarm_time.tm_min &&
-            alarms[i].time.tm_sec == alarm_time.tm_sec) {
-            printf("Erro: Esse alarme já está programado para %02d:%02d:%02d\n",
-                   alarm_time.tm_hour, alarm_time.tm_min, alarm_time.tm_sec);
+            alarms[i].time.tm_sec == alarm_time.tm_sec
+            ) {
+            DEBUG_PRINT(("Erro: Esse alarme já está programado para %02d:%02d:%02d\n",
+                   alarm_time.tm_hour, alarm_time.tm_min, alarm_time.tm_sec));
             return "Esse alarme já está programado";
         }
     }
@@ -128,13 +130,13 @@ const char* insert_alarm(time_t tt)
     }
 
     // Se não houver slots livres, retorna mensagem de erro
-    printf("Erro: Limite de alarmes atingido!\n");
+    DEBUG_PRINT(("Erro: Limite de alarmes atingido!\n"));
     return "Erro: Limite de alarmes atingido";
 }
 
 
 
-void check_alarm(void)
+bool check_alarm(void)
 {
     time_t now = time(NULL);
     struct tm current_time = *localtime(&now); // Obtém o horário atual
@@ -142,14 +144,17 @@ void check_alarm(void)
     for (int i = 0; i < MAX_ALARMS; i++) {
         if (alarms[i].active &&
             alarms[i].time.tm_hour == current_time.tm_hour &&
-            alarms[i].time.tm_min == current_time.tm_min) {
+            alarms[i].time.tm_min == current_time.tm_min &&
+            alarms[i].time.tm_sec == current_time.tm_sec) {
             printf("Alarme disparado: %02d:%02d:%02d\n",
                    alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec);
+            return true;
 
             // Desativa o alarme após disparar (opcional)
-            alarms[i].active = false;
+            //alarms[i].active = false;
         }
     }
+    return false;
 }
 
 

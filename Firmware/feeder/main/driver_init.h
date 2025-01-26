@@ -28,7 +28,7 @@
 #define DebounceTicks	5
 #define NUM_BTNS		2
 
-void touch_init();
+void init_touch(void);
 
 /**
  * Lê o estado do botão touch.

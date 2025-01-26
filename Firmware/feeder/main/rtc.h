@@ -8,6 +8,7 @@
  #define _RTC
 
  #include <time.h>
+ #include <stdbool.h>
 
  #define MAX_ALARMS 24 // Número máximo de alarmes diários
 
@@ -19,7 +20,7 @@ void print_date(void);
 time_t get_time(void);
 void sort_alarms(void);
 const char* insert_alarm(time_t tt);
-void check_alarm(void);
+bool check_alarm(void);
 int get_all_alarms(time_t alarm_list[MAX_ALARMS]);
 
 
