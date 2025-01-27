@@ -3,20 +3,25 @@
 
 cmake_minimum_required(VERSION 3.5)
 
+# If CMAKE_DISABLE_SOURCE_CHANGES is set to true and the source directory is an
+# existing directory in our source tree, calling file(MAKE_DIRECTORY) on it
+# would cause a fatal error, even though it would be a no-op.
+if(NOT EXISTS "C:/Users/uesle/esp/v5.3.2/esp-idf/components/bootloader/subproject")
+  file(MAKE_DIRECTORY "C:/Users/uesle/esp/v5.3.2/esp-idf/components/bootloader/subproject")
+endif()
 file(MAKE_DIRECTORY
-  "C:/Espressif/frameworks/esp-idf-v5.3.1/components/bootloader/subproject"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/tmp"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/src"
-  "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/tmp"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/src"
+  "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/uesle/workspace/RTC_teste/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

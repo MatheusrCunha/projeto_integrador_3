@@ -21,9 +21,8 @@ const touch_pad_t Num_touch[] = {
 
 uint16_t raw_value_touch = 0;
 
-void touch_init() {
+void init_touch() {
     esp_err_t err;
-
     // Inicializa o driver dos touch pads
     err = touch_pad_init();
     if (err != ESP_OK) {

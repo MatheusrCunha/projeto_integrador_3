@@ -8,12 +8,28 @@
 #ifndef MAIN_DEFINES_H_
 #define MAIN_DEFINES_H_
 
+#define DEBUG 1
+
+#include <stdio.h>
+
+#ifdef DEBUG
+#define DEBUG_PRINT(x) do { printf x; } while (0)
+#else
+#define DEBUG_PRINT(x) do { } while (0)
+#endif
+
+
 //BUTTONS ENUMERATION   Numeros são usados para acessar a 
 
 #define btn_set						0  
 #define btn_init					1
 #define btn_D13					    0
 #define btn_D14					    1
+
+
+
+
+
 
 /*
 "TOUCH_PAD_NUM0", //GPIO4
