@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/uesle/workspace/RTC_teste/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/PI_3/projeto_integrador_III/Firmware/RTC_teste/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)

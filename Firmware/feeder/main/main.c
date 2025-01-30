@@ -4,9 +4,13 @@
 #include "esp_log.h"
 #include "timer_utils.h"
 
+#define DEBUG 1
+
 #include "servo.h"
 #include "driver_init.h"
 #include "defines.h"
+#include "rtc.h"
+#include "wifi.h"
 
 //Funções apenas para testes de aplicação
 uint32_t lastMillis = 0;
@@ -14,6 +18,8 @@ bool bttouch = false;
 void test_touch_buttons(void);
 void test_delay_tick(void);
 void test_move_servo(void);
+void test_servo_and_rtc(void);
+void test_alarme(void);
 
 
 
@@ -32,9 +38,13 @@ void app_main(void) {
 
 
 	
-	touch_init(); // Inicializa o touch
+	init_touch(); // Inicializa o touch
     init_servo(); // Inicializa o timer e pinos do servo
+    
 
+
+    //test_servo_and_rtc();
+    test_alarme();
 
     while (1) {
         //Executa função de teste
@@ -45,6 +55,62 @@ void app_main(void) {
     }
 }
 
+void test_alarme(void){
+
+    
+    init_rtc();
+    wifi_init();
+    print_date();
+    DEBUG_PRINT(("Este é um print em modo de DEBUG.\n"));
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        DEBUG_PRINT(("Retorno de inserção alarme: %s\n", insert_alarm(get_time() + (10*i))));
+      //  printf("Retorno de inserção alarme: %s\n", insert_alarm(get_time() + (10*i))); // Não deve permitir inserir mais que um alarme por minuto
+    }
+    
+    time_t alarm_list[MAX_ALARMS];
+    int alarm_count = get_all_alarms(alarm_list);
+
+
+    if (alarm_count == 0) {
+        //TODO  //Responde para o aplicativo "Nenhum alarme programado.\n"
+        printf("Nenhum alarme programado.\n");
+    } else {
+        //TODO // //Responde para o aplicativo "Lista de alarmes programados:\n"
+        printf("Lista de alarmes programados:\n");
+        for (int i = 0; i < alarm_count; i++) {
+            struct tm *alarm_time = localtime(&alarm_list[i]);
+            printf("Alarme %d: %02d:%02d:%02d\n", 
+                   i + 1, 
+                   alarm_time->tm_hour, 
+                   alarm_time->tm_min,
+                   alarm_time->tm_sec);
+        }
+    }
+    
+
+    while (1) {
+        print_date();
+        check_alarm(); // Precisa aguarda 1 segundo para ser chamado a função de novo
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+
+
+}
+
+
+void test_servo_and_rtc(void){
+
+    init_rtc();
+
+    while (1) {
+        print_date();
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+
+
+}
 
 void test_touch_buttons(void) {
     sweep_buttons();

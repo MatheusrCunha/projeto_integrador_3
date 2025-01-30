@@ -20,28 +20,38 @@ static const char *TAG = "wifi softAP";
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-// Função para lidar com a requisição POST /message
+#include <time.h>   // Para manipulação de Unix Time
+#include <string.h>
+#include <stdlib.h>
+
 esp_err_t message_post_handler(httpd_req_t *req) {
-    char buf[100];
-    if (req->content_len > sizeof(buf)) {
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Message too large");
+    char buf[16];  // Buffer para armazenar o valor recebido
+    int ret = httpd_req_recv(req, buf, sizeof(buf) - 1);
+    if (ret <= 0) {
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid Request");
         return ESP_FAIL;
     }
 
-    int ret, remaining = req->content_len;
-    while (remaining > 0) {
-        if ((ret = httpd_req_recv(req, buf, MIN(remaining, sizeof(buf)))) <= 0) {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
-                continue;
-            }
-            return ESP_FAIL;
-        }
-        remaining -= ret;
-        buf[ret] = 0;
-        ESP_LOGI(TAG, "Received message: %s", buf);
+    buf[ret] = '\0';  // Finaliza a string recebida
+    ESP_LOGI("POST_HANDLER", "Received Raw Data: %s", buf);
+
+    // Converta o número recebido para Unix Time
+    char *endptr;
+    long time_value = strtol(buf, &endptr, 10);
+
+    if (*endptr != '\0' || time_value < 0) {
+        ESP_LOGE("POST_HANDLER", "Invalid Unix Time");
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid Unix Time");
+        return ESP_FAIL;
     }
 
-    httpd_resp_send(req, "Message received", HTTPD_RESP_USE_STRLEN);
+    // Exemplo: convertendo "43800" para Unix Time e processando
+    time_t unix_time = time_value;
+    struct tm *time_info = gmtime(&unix_time);
+    ESP_LOGI("POST_HANDLER", "Converted Time: %02d:%02d:%02d",
+             time_info->tm_hour, time_info->tm_min, time_info->tm_sec);
+
+    httpd_resp_send(req, "Time Processed Successfully", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
 

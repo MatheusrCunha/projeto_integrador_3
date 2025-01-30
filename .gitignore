@@ -1,2 +1,12 @@
-
 Firmware/feeder/.vscode/settings.json
+/Firmware/feeder/build
+/Firmware/feeder/.vscode/settings.json
+/Firmware/RTC_teste/build/
+/Firmware/RTC_teste/build/bootloader-prefix/
+
+# Ignorar pastas build em qualquer lugar do repositório
+**/Firmware/RTC_teste/build/
+**/feeder/build/
+**/*.elf
+**/*.map
+**/*.o

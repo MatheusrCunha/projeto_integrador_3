@@ -1,3 +1,10 @@
+/*
+ * rtc.c
+ *
+ *  Created on: Jan 8, 2025
+ *      Author: Ueslei
+ */
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <esp_system.h>
@@ -16,7 +23,7 @@ struct tm data;//Cria a estrutura que contem as informacoes da data.
 
 void app_main() {
 	
-	uart_init(); // Inicializa a UART
+	//uart_init(); // Inicializa a UART
 	
 	
     struct timeval tv; // Use 'struct' para definir a estrutura

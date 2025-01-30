@@ -5,6 +5,12 @@
         "**/sigasi.json": "jsonc",
         "**/.sigasi/**/compilation.log": "shellscript",
         "**/.sigasi/**/compilation.plan": "json",
-        "servo.h": "c"
+        "rtc.h": "c",
+        "servo.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c",
+        "defines.h": "c",
+        "timer_utils.h": "c",
+        "driver_init.h": "c"
     }
 }
