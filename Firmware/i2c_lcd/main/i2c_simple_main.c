@@ -31,8 +31,12 @@ void app_main(void)
     ESP_LOGI(TAG, "I2C initialized successfully");
     
 	lcd_init(); //inicia lcd
-	
-	lcd_send_string("Projeto Integrador 3"); //envia uma string
-	
-	lcd_put_cur(1, 0); //
+
+	lcd_send_string("Prog:"); //envia uma string
+	lcd_put_cur(1, 0); // Muda cursor para segunda Linha
+    lcd_send_string("1 - 12:00"); //envia uma string
+    lcd_put_cur(2, 0); // Muda cursor para terceira Linha
+    lcd_send_string("2 - 13:50"); //envia uma string
+    lcd_put_cur(3, 0); /// Muda cursor para quarta   Linha
+    lcd_send_string("3 - 19:00"); //envia uma string
 }

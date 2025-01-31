@@ -11,4 +11,6 @@ Firmware/feeder/.vscode/settings.json
 **/*.map
 **/*.o
 /Firmware/i2c_lcd/build
+**Firmware/i2c_lcd/.vscode/settings.json
+/Firmware/i2c_lcd/sdkconfig
 
