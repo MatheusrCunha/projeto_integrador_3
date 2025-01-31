@@ -8,10 +8,13 @@
 
 #include "rtc.h"
 #include "defines.h"
+#include "i2c-lcd.h"
+
 
 #include <sys/time.h>
 #include <stdio.h>
 #include <unistd.h>
+
 
 
 struct tm data; // Cria a estrutura que contem as informacoes da data.
@@ -70,6 +73,12 @@ void print_date(void)
 
     DEBUG_PRINT(("\nUnix Time: %ld\n", (long)tt));         // Mostra na Serial o Unix time.
     DEBUG_PRINT(("Data formatada: %s\n", data_formatada)); // Mostra na Serial a data formatada
+    
+    //REMOVER - APenas para teste
+    strftime(data_formatada, 64, "%H:%M:%S", &data);
+    lcd_put_cur(0, 12); // Muda cursor para segunda Linha
+    lcd_send_string(data_formatada); //envia uma string
+   
 }
 
 time_t get_time(void)

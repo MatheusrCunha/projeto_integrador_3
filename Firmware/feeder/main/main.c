@@ -11,6 +11,7 @@
 #include "defines.h"
 #include "rtc.h"
 #include "wifi.h"
+#include "i2c-lcd.h"
 
 //Funções apenas para testes de aplicação
 uint32_t lastMillis = 0;
@@ -57,10 +58,22 @@ void app_main(void) {
 
 void test_alarme(void){
 
-    
+ 
     init_rtc();
     wifi_init();
     print_date();
+
+     ESP_ERROR_CHECK(i2c_master_init()); //Incialização da comuncicação I2C
+    lcd_init(); //inicia lcd
+    lcd_put_cur(0, 0); // Muda cursor para segunda Linha
+    lcd_send_string("Feeders"); //envia uma string
+    lcd_put_cur(1, 0); // Muda cursor para segunda Linha
+    lcd_send_string("07:30"); //envia uma string
+    lcd_put_cur(2, 0); // Muda cursor para segunda Linha
+    lcd_send_string("12:00"); //envia uma string
+    lcd_put_cur(3, 0); // Muda cursor para segunda Linha
+    lcd_send_string("18:00"); //envia uma string
+
     DEBUG_PRINT(("Este é um print em modo de DEBUG.\n"));
 
     for (size_t i = 0; i < 5; i++)
@@ -88,8 +101,8 @@ void test_alarme(void){
                    alarm_time->tm_sec);
         }
     }
-    
 
+    
     while (1) {
         print_date();
         check_alarm(); // Precisa aguarda 1 segundo para ser chamado a função de novo

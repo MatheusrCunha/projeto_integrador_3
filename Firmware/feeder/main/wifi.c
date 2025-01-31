@@ -41,6 +41,8 @@ esp_err_t message_post_handler(httpd_req_t *req) {
         remaining -= ret;
         buf[ret] = 0;
         ESP_LOGI(TAG, "Received message: %s", buf);
+        set_date(atoi(buf));
+        print_date();
     }
 
     httpd_resp_send(req, "Message received", HTTPD_RESP_USE_STRLEN);

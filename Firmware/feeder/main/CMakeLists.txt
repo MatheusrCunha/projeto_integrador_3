@@ -3,5 +3,6 @@ idf_component_register(SRCS     "rtc.c"
                                 "servo.c"
                                 "driver_init.c"  
                                 "timer_utils.c" 
-                                "wifi.c"  
+                                "wifi.c"
+                                "i2c-lcd.c"  
                     INCLUDE_DIRS "")
