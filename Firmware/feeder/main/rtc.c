@@ -54,7 +54,9 @@ void set_date(int timeval_sec)
         printf("Erro: tempo inválido!\n");
         return;
     }
-
+    
+    DEBUG_PRINT(("set_date=%d\n",timeval_sec));
+    
     struct timeval tv;       // Use 'struct' para definir a estrutura
     tv.tv_sec = timeval_sec; // Atribui um valor à tv_sec
     settimeofday(&tv, NULL); // Configura o horário
@@ -76,10 +78,9 @@ void print_date(void)
     
     //REMOVER - APenas para teste
     strftime(data_formatada, 64, "%H:%M:%S", &data);
-    lcd_put_cur(0, 12); // Muda cursor para segunda Linha
-    lcd_send_string(data_formatada); //envia uma string
    
 }
+
 
 time_t get_time(void)
 {
@@ -179,4 +180,20 @@ int get_all_alarms(time_t alarm_list[MAX_ALARMS])
     }
 
     return count; // Retorna o número de alarmes ativos
+}
+
+
+// Retona o alarme na forma de string "_pos-HH:MM" 
+char* get_alarm_format(int _pos)
+{
+    static char alarm_str[20]; // Buffer estático para armazenar o formato HH:MM
+
+    if(_pos >= MAX_ALARMS){
+        DEBUG_PRINT(("Posição de alarme acima do limite"));
+        return "";
+    }
+    else { 
+        snprintf(alarm_str, sizeof(alarm_str), "%d-%02d:%02d", _pos,alarms[_pos].time.tm_hour, alarms[_pos].time.tm_min);
+        return alarm_str;
+    }
 }

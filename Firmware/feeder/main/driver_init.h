@@ -25,7 +25,7 @@
 
 
 
-#define DebounceTicks	5
+#define DebounceTicks	15
 #define NUM_BTNS		2
 
 void init_touch(void);

@@ -52,9 +52,10 @@ bool read_buttons(unsigned char __numTecla) {
 
     // Lê o valor filtrado do touch pad
     touch_pad_read_filtered(Num_touch[__numTecla], &filtered_value);
+   // printf("Lê botão:%d = %d\n", __numTecla, filtered_value);
 
     // Verifica se o botão foi pressionado
-    if (filtered_value < 850) {
+    if (filtered_value < 1100) {
         bt_Pressed = true;
     } else {
         bt_Pressed = false;
@@ -104,3 +105,5 @@ bool GetButton(unsigned char __tecla) {
         return false;
     }
 }
+
+

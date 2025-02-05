@@ -12,6 +12,8 @@
 #include "lwip/sys.h"
 #include "wifi.h"
 #include "rtc.h"
+#include "defines.h"
+
 
 #define EXAMPLE_ESP_WIFI_SSID      "esp_cunha"
 #define EXAMPLE_ESP_WIFI_PASS      "12345678"
@@ -20,7 +22,7 @@
 
 static const char *TAG = "wifi softAP";
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 
 // Função para lidar com a requisição POST /message
 esp_err_t message_post_handler(httpd_req_t *req) {

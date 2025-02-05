@@ -11,6 +11,7 @@
         "stdio.h": "c",
         "defines.h": "c",
         "timer_utils.h": "c",
-        "driver_init.h": "c"
+        "driver_init.h": "c",
+        "wifi.h": "c"
     }
 }

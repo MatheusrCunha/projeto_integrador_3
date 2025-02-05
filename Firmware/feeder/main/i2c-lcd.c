@@ -6,6 +6,7 @@
 #include "unistd.h"
 #include <stdio.h>
 #include "soc/gpio_num.h"
+#include <sys/time.h>
 
 #define SLAVE_ADDRESS_LCD 0x27 // change this according to ur setup
 //0x4E>>1
@@ -65,10 +66,12 @@ void lcd_put_cur(int row, int col)
             col |= 0xC0; //Endereço segunda linha
             break;
 		case 2:
-			col |= 0X94; //Endereço terceira linha
+			col |= 0X80; //Endereço terceira linha
+			col +=20;
             break;
         case 3:
-            col |= 0XD4; //Endereço quarta linha
+            col |= 0xC0; //Endereço quarta linha
+			col +=20;
             break;
     }
 
@@ -127,3 +130,19 @@ void lcd_send_string (char *str)
 
     return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
 }
+
+
+void print_date_lcd(void)
+{
+	struct tm hora; // Cria a estrutura que contem as informacoes da data.
+	
+    time_t tt = time(NULL); // Obtem o tempo atual em segundos.
+    hora = *gmtime(&tt);    // Converte o tempo atual e atribui na estrutura
+
+    char data_formatada[64];
+    strftime(data_formatada, 64, "%H:%M:%S", &hora);
+	lcd_put_cur(0, 12); // Muda cursor para segunda Linha
+	lcd_send_string(data_formatada); //envia uma string
+   
+}
+

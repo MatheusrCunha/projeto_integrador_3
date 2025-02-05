@@ -22,6 +22,7 @@ void sort_alarms(void);
 const char* insert_alarm(time_t tt);
 bool check_alarm(void);
 int get_all_alarms(time_t alarm_list[MAX_ALARMS]);
+char* get_alarm_format(int _pos);
 
 
  #endif /* _RTC */

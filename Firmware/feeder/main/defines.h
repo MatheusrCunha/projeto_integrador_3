@@ -18,6 +18,7 @@
 #define DEBUG_PRINT(x) do { } while (0)
 #endif
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b)) // Define uma macro para obter o valor mínimo
 
 //BUTTONS ENUMERATION   Numeros são usados para acessar a 
 
@@ -28,7 +29,15 @@
 
 
 
-
+//States
+#define	standby							0
+#define	update_date			            1
+#define	show_timers			        	2
+#define	pag_timers_1					3
+#define	pag_timers_2			        4
+#define	pag_timers_3			        5
+#define	pag_timers_4			        6
+#define	working					       	7
 
 
 /*

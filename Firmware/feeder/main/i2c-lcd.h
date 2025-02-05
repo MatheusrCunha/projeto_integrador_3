@@ -14,3 +14,5 @@ void lcd_put_cur(int row, int col);
 void lcd_clear(void); //Limpa a tela do lcd
 
 esp_err_t i2c_master_init(void);
+
+void print_date_lcd(void);
