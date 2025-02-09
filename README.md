@@ -113,6 +113,14 @@ Os documentos da modelagem do funil e dosador estão na pasta arquivo modelagem 
 
 ![image](https://github.com/user-attachments/assets/be1bccc2-c6dc-48cd-971c-09f627c5b971)
 
+## Desenvolvimento da PCB
+
+
+![WhatsApp Image 2025-02-08 at 19 09 35](https://github.com/user-attachments/assets/8a06c780-9de1-40e2-a5c6-70b4ee6ea348)
+
+![WhatsApp Image 2025-02-08 at 17 19 42](https://github.com/user-attachments/assets/91be93cb-03ab-4beb-8226-fe314d0fbc2d)
+
+
 ## Referências
 
 A2ROBOTICS. **Display LCD 16x2**. [S.d]. Disponível em:
