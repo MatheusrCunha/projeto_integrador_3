@@ -75,8 +75,7 @@ void sweep_stateMachine(void)
 			lcd_send_string("Feeders");
 			print_date_lcd(); //Atualiza hora no display
 			
-			time_t alarm_list[MAX_ALARMS];
-			int cont = get_all_alarms(alarm_list);
+			int cont = count_alarms();
 
 			if(cont > 0){
 				for (size_t i = 0; i < MIN(OFFSET_PAG2, cont); i++)
@@ -99,7 +98,7 @@ void sweep_stateMachine(void)
 			lcd_send_string("Feeders");
 			print_date_lcd(); //Atualiza hora no display
 		
-			cont = get_all_alarms(alarm_list);
+			cont = count_alarms();
 
 			if(cont>=OFFSET_PAG2){
 				for (size_t i = OFFSET_PAG2; i < MIN(OFFSET_PAG3, cont); i++)
@@ -123,7 +122,7 @@ void sweep_stateMachine(void)
 			lcd_send_string("Feeders");
 			print_date_lcd(); //Atualiza hora no display
 
-			cont = get_all_alarms(alarm_list);
+			cont = count_alarms();
 
 			if(cont>=OFFSET_PAG3){
 				for (size_t i = OFFSET_PAG3; i < MIN(OFFSET_PAG4, cont); i++)
@@ -148,7 +147,7 @@ void sweep_stateMachine(void)
 			lcd_send_string("Feeders");
 			print_date_lcd(); //Atualiza hora no display
 			
-			cont = get_all_alarms(alarm_list);
+			cont = count_alarms();
 
 			if(cont>=OFFSET_PAG4){
 				for (size_t i = OFFSET_PAG4; i < MIN(MAX_ALARMS, cont); i++)

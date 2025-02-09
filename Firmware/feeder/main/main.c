@@ -94,7 +94,7 @@ void test_state_machine(void) {
     DEBUG_PRINT(("MODO DEBUG está ativo!!!.\n"));
 
     for (size_t i = 0; i < 8; i++) {
-        DEBUG_PRINT(("Retorno de inserção alarme: %s\n", insert_alarm(3600 + get_time() + (3600*i))));
+        DEBUG_PRINT(("Retorno de inserção alarme: %s\n", insert_alarm(10800 + get_time() + (1800*i),0)));
     }
 
     time_t alarm_list[MAX_ALARMS];
