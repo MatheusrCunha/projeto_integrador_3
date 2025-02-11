@@ -7,6 +7,11 @@
 #include "servo.h"
 #include "freertos/FreeRTOS.h"
 #include "driver/ledc.h"
+#include "defines.h"
+#include "rtc.h"
+#include "timer_utils.h"
+
+
 
 
 int ServoAngle(int angle) {
@@ -49,6 +54,32 @@ void init_servo(void){
 	configure_ledc_channel();
 }
 
+
+extern volatile uint32_t tickCount; // Declaração variável de contagem de ticks (em milissegundos)
+uint32_t lastMillis = 0; //Variavel para salvar o ultimo milisegundo
+int qtd_doses=0;
+bool wait=false;
+void alimenta_gato(int _doses){
+
+    qtd_doses= qtd_doses + _doses; //Vai somando caso não termine a dose antes de ser chamada a função novamente
+    DEBUG_PRINT(("Funcao alimenta_gato: %dX\n",qtd_doses));
+    if(((qtd_doses > 0 &&  wait == false)) ){
+        moveServo(END_POSITION);
+        DEBUG_PRINT(("Alimentamdo gato: %dX\n",qtd_doses));
+        print_date();
+        wait = true; // Variavel para aguardar a execução do movimento do servo
+        lastMillis = tickCount;
+    } else if (TickStampDelta(lastMillis, tickCount) > 1000) {
+        moveServo(START_POSITION);
+        if(wait==true){
+            qtd_doses--; //Decrementa para contar que fez a alimentação de uma dose
+            wait = false;
+        }
+        DEBUG_PRINT(("Recarregando dose \n"));
+        print_date();
+
+    }
+}
 
 
 

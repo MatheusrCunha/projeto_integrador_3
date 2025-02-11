@@ -27,6 +27,7 @@ void configure_ledc_timer(void);
 
 void configure_ledc_channel(void);
 void init_servo(void);
+void alimenta_gato(int _doses);
 
 
 void initServo();

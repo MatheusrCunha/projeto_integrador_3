@@ -26,7 +26,10 @@
 #define btn_init					1
 #define btn_D13					    0
 #define btn_D14					    1
+#define btn_D27					    2
 
+#define MAX_DOSES                   5
+#define MIN_DOSES                   1
 
 
 //States
@@ -38,6 +41,11 @@
 #define	pag_timers_3			        5
 #define	pag_timers_4			        6
 #define	working					       	7
+#define	pag_adj_hours					8       	
+#define	pag_config_hours				9   
+#define	pag_config_min				    10
+#define	pag_config_doses			    11
+#define	pag_config_timer		        12
 
 
 /*

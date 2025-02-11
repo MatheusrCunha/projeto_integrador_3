@@ -171,8 +171,8 @@ const char* disable_alarm(int _indice)
 }
 
 
-
-bool check_alarm(void)
+//Confere se alarm disparou e retorna quantidade de doses
+int check_alarm(void)
 {
     time_t now = time(NULL);
     struct tm current_time = *localtime(&now); // Obtém o horário atual
@@ -182,9 +182,9 @@ bool check_alarm(void)
             alarms[i].time.tm_hour == current_time.tm_hour &&
             alarms[i].time.tm_min == current_time.tm_min &&
             alarms[i].time.tm_sec == current_time.tm_sec) {
-            printf("Alarme disparado: %02d:%02d:%02d\n",
-                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec);
-            return true;
+            DEBUG_PRINT(("Alarme disparado: %02d:%02d:%02d\n",
+                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec));
+            return alarms[i].doses;
 
             // Desativa o alarme após disparar (opcional)
             //alarms[i].active = false;
