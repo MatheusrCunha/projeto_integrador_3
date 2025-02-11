@@ -105,7 +105,10 @@ Quando o botão Programar alimentação é pressionando é possível acessar a s
 
 ![image](https://github.com/user-attachments/assets/002252fc-1358-48a8-8e58-e29e334a72ac)
 
-Também teremos uma terceira tela que apresentaremos algumas informações.
+Na próxima imagem temos a figura que mostra uma parte dos blocos do aplicativo desenvolvido. Nessa configuração é realizada a comunicação wifi e realizamnos o get
+
+![Captura de tela 2025-02-11 151435](https://github.com/user-attachments/assets/8fb19589-05b3-4400-af51-491092453558)
+
 
 ## Modelagem 3D
 
@@ -115,6 +118,7 @@ Os documentos da modelagem do funil e dosador estão na pasta arquivo modelagem 
 
 ## Desenvolvimento da PCB
 
+A PCB foi projetada no EasyEDA, contendo 3 botões touch, regulador de tensão, conexão para o servo motor e interface I2C para o LCD.
 
 ![WhatsApp Image 2025-02-08 at 19 09 35](https://github.com/user-attachments/assets/8a06c780-9de1-40e2-a5c6-70b4ee6ea348)
 
