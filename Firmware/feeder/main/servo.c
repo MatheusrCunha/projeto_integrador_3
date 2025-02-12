@@ -69,7 +69,7 @@ void alimenta_gato(int _doses){
         print_date();
         wait = true; // Variavel para aguardar a execução do movimento do servo
         lastMillis = tickCount;
-    } else if (TickStampDelta(lastMillis, tickCount) > 1000) {
+    } else if (TickStampDelta(lastMillis, tickCount) > 1800) {
         moveServo(START_POSITION);
         if(wait==true){
             qtd_doses--; //Decrementa para contar que fez a alimentação de uma dose
@@ -80,37 +80,5 @@ void alimenta_gato(int _doses){
 
     }
 }
-
-
-
-
-
-
- // Funções não usadas por enquanto
-void initServo() {
-	gpio_config_t io_conf = {
-        .pin_bit_mask = (1ULL << BT),
-        .mode = GPIO_MODE_INPUT,
-        .pull_up_en = GPIO_PULLUP_ENABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE
-    };
-    gpio_config(&io_conf);
-
-}
-
-void validaServo() {
-
-    for (int angle = 0; angle <= 45; angle += 10) { 
-        moveServo(angle);
-        vTaskDelay(100 / portTICK_PERIOD_MS); 
-    }
-    for (int angle = 45; angle >= 0; angle -= 10) { 
-        moveServo(angle);
-        vTaskDelay(100 / portTICK_PERIOD_MS); 
-    }
-
-}
-
 
 

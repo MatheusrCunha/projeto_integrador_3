@@ -26,6 +26,8 @@ int check_alarm(void);
 int count_alarms(void);
 int get_all_alarms(time_t alarm_list[MAX_ALARMS]);
 char* get_alarm_format(int _pos);
+char* get_all_alarm_format_app(void);
+
 
 
  #endif /* _RTC */

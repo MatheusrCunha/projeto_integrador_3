@@ -15,7 +15,7 @@
 #include "defines.h"
 
 
-#define EXAMPLE_ESP_WIFI_SSID      "esp_cunha"
+#define EXAMPLE_ESP_WIFI_SSID      "Alimentador de Gatos"
 #define EXAMPLE_ESP_WIFI_PASS      "12345678"
 #define EXAMPLE_ESP_WIFI_CHANNEL   6
 #define EXAMPLE_MAX_STA_CONN       4
@@ -48,6 +48,8 @@ esp_err_t message_post_handler(httpd_req_t *req) {
         char *key;
         char *value_str;
         int value;
+        int timer_value = 0;
+
 
         char *rest = buf;
         while ((token = strtok_r(rest, ",", &rest))) {
@@ -66,18 +68,22 @@ esp_err_t message_post_handler(httpd_req_t *req) {
                 while (end > value_str && isspace((unsigned char)*end)) end--;
                 end[1] = '\0';
 
+
                 sscanf(value_str, "%d", &value);
                 if (strcmp(key, "Timer") == 0) {
-                    int timer_value = value;
-                    const char *result = insert_alarm(timer_value, 2);
-                    ESP_LOGI(TAG, "Timer value: %s", result);
+                    timer_value = value;
+                  //  char result[10];
+                  //  snprintf(result, sizeof(result), "%d",timer_value);
+                
+                    ESP_LOGI(TAG, "Timer value: %d", timer_value);
                 } else if (strcmp(key, "Remove_timer") == 0) {
                     int remove_timer_value = value;
                     const char *result = disable_alarm(remove_timer_value);
                     ESP_LOGI(TAG, "Remove_timer: %s", result);
                 } else if (strcmp(key, "doses") == 0) {
                     int doses_value = value;
-                    ESP_LOGI(TAG, "Doses value: %d", doses_value);
+                    const char *result = insert_alarm(timer_value, doses_value);
+                    ESP_LOGI(TAG, "Doses value: %s", result);
                 } else if (strcmp(key, "SetHour") == 0) {
                     int set_hour_value = value;
                     long int unix_time = set_date(set_hour_value);
@@ -131,12 +137,15 @@ esp_err_t message_get_handler(httpd_req_t *req) {
         }
         free(buf);
     }
-    if(incrementa==count_alarms()){
+    if(incrementa==1){
+   // if(incrementa==count_alarms()){
         incrementa=0;
         httpd_resp_send(req, "", HTTPD_RESP_USE_STRLEN); //Responde string em branco para Aplicativo entender que não tem mais comando
         DEBUG_PRINT(("Incrementa:%d\n",incrementa));
     }else{
-        httpd_resp_send(req, get_alarm_format(incrementa), HTTPD_RESP_USE_STRLEN);
+        httpd_resp_send(req, get_all_alarm_format_app() , HTTPD_RESP_USE_STRLEN);
+
+       // httpd_resp_send(req, get_alarm_format(incrementa), HTTPD_RESP_USE_STRLEN);
         incrementa++;
         DEBUG_PRINT(("Incrementa++:%d\n",incrementa));
     }

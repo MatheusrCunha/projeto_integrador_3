@@ -8,7 +8,7 @@
 #ifndef MAIN_DEFINES_H_
 #define MAIN_DEFINES_H_
 
-#define DEBUG 1
+//#define DEBUG
 
 #include <stdio.h>
 
@@ -34,32 +34,16 @@
 
 //States
 #define	standby							0
-#define	update_date			            1
 #define	show_timers			        	2
 #define	pag_timers_1					3
 #define	pag_timers_2			        4
 #define	pag_timers_3			        5
 #define	pag_timers_4			        6
-#define	working					       	7
 #define	pag_adj_hours					8       	
 #define	pag_config_hours				9   
 #define	pag_config_min				    10
 #define	pag_config_doses			    11
 #define	pag_config_timer		        12
-
-
-/*
-"TOUCH_PAD_NUM0", //GPIO4
-"TOUCH_PAD_NUM1", //GPIO0
-"TOUCH_PAD_NUM2", //GPIO2
-"TOUCH_PAD_NUM3", //GPIO15 
-"TOUCH_PAD_NUM4"  //GPIO13
-"TOUCH_PAD_NUM5", //GPIO12
-"TOUCH_PAD_NUM6", //GPIO14
-"TOUCH_PAD_NUM7", //GPIO27
-"TOUCH_PAD_NUM8"  //GPIO33
-"TOUCH_PAD_NUM9", //GPIO32
-*/
 
 
 #endif /* MAIN_DEFINES_H_ */

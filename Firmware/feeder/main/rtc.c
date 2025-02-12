@@ -10,16 +10,13 @@
 #include "defines.h"
 #include "i2c-lcd.h"
 
-
 #include <sys/time.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <string.h>
 
 
 struct tm data; // Cria a estrutura que contem as informacoes da data.
-
-
 
 // Estrutura para armazenar os alarmes
 typedef struct {
@@ -41,9 +38,6 @@ void init_alarms(void)
 void init_rtc(void)
 {
     set_date(0);// Seta data como 01/01/1970 00:00:00
-    //struct timeval tv;       // Use 'struct' para definir a estrutura
-    //tv.tv_sec = 0; // Atribui um valor à tv_sec
-   // settimeofday(&tv, NULL); // Configura o horário
     init_alarms();
 }
 
@@ -133,8 +127,8 @@ const char* insert_alarm(time_t tt, int _number_doses)
             alarms[i].time = alarm_time; // Define o horário do alarme
             alarms[i].active = true;     // Ativa o alarme
             alarms[i].doses = _number_doses;
-            printf("Alarme inserido: %02d:%02d:%02d\n",
-                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec);
+            printf("Alarme inserido: %02d:%02d:%02d Doses:%02d\n",
+                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec, alarms[i].doses);
             sort_alarms(); //Ordena cronologicamente os alarmes
             return "Alarme inserido com sucesso";
         }
@@ -236,4 +230,25 @@ char* get_alarm_format(int _pos)
         snprintf(alarm_str, sizeof(alarm_str), "%d-%02d:%02d", _pos,alarms[_pos].time.tm_hour, alarms[_pos].time.tm_min);
         return alarm_str;
     }
+}
+
+
+char* get_all_alarm_format_app(void)
+{
+    static char alarm_str[1024]; // Buffer estático para armazenar o formato HH:MM
+    alarm_str[0] = '\0'; // Inicializa a string vazia
+
+    char temp[40]; // Buffer temporário para cada entrada
+
+    for (size_t i = 0; i < MAX_ALARMS; i++)
+    {
+        if(alarms[i].active){
+            snprintf(temp, sizeof(temp), "%d-%02d:%02d - %d doses,", i, alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].doses);
+            strncat(alarm_str, temp, sizeof(alarm_str) - strlen(alarm_str) - 1); // Concatena o buffer temporário ao buffer principal
+        }
+
+    }
+    DEBUG_PRINT(("%s\n",alarm_str));
+
+    return alarm_str;
 }

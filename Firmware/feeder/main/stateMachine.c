@@ -30,11 +30,25 @@ int	state = 0, last_state = 0, adc;
 
 int hora = 0;	 //Apenas para configuraçao de alarme e relógio
 int minuto = 0;	 //Apenas para configuraçao de alarme e relógio
-int doses = 0;	 //Apenas para configuraçao de alarme e relógio
-static char alarm_str[20];//Apenas paramensagem no display do alarme e relógio
+int doses = MIN_DOSES;	 //Apenas para configuraçao de alarme e relógio
+static char alarm_str[25];//Apenas paramensagem no display do alarme e relógio
+uint32_t lastUpdate = 0; // Variável para controlar o tempo da última atualização do display
+
+
+void atualiza_hour_minute_lcd(void){
+	lcd_put_cur(2, 0);
+	snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d               ",hora,minuto);
+	lcd_send_string(alarm_str);
+}
 
 void sweep_stateMachine(void)
 {
+	uint32_t currentTime = tickCount;
+    if (TickStampDelta(lastUpdate, currentTime) >= 1000) {
+        print_date_lcd(); // Atualiza a data no display a cada 1 segundo
+        lastUpdate = currentTime;
+    }
+
 	switch (state)
 	{
 		case standby:
@@ -86,9 +100,7 @@ void sweep_stateMachine(void)
 						lcd_send_string("Defina a hora!");
 						lcd_put_cur(3, 0);
 						lcd_send_string("--    ");
-						lcd_put_cur(2, 0);
-						snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-						lcd_send_string(alarm_str);
+						atualiza_hour_minute_lcd();
 
 						state = pag_config_hours;
 
@@ -102,9 +114,7 @@ void sweep_stateMachine(void)
 						lcd_send_string("Defina a hora!");
 						lcd_put_cur(3, 0);
 						lcd_send_string("--    ");
-						lcd_put_cur(2, 0);
-						snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-						lcd_send_string(alarm_str);
+						atualiza_hour_minute_lcd();
 						state = pag_config_hours;
 
 						break;
@@ -113,12 +123,7 @@ void sweep_stateMachine(void)
 						break;
 				}
 			}
-			break;
-			
-		case update_date:
-
-			break;
-			
+			break;			
 
 		case pag_timers_1:
 			lcd_clear();
@@ -238,7 +243,7 @@ void sweep_stateMachine(void)
 			
 			hora = 0;
 			minuto = 0;
-			doses = 0;
+			doses = MIN_DOSES;
 
 			lcd_clear();
 			print_date_lcd(); //Atualiza hora no display
@@ -259,14 +264,12 @@ void sweep_stateMachine(void)
 					DEBUG_PRINT(("hora:%d\n", hora));
 
 					hora++;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}else{
 					hora=0;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}
 			}
 			if (GetButton(btn_D27)) { //"Botão D27 pressionado\n"
@@ -275,14 +278,12 @@ void sweep_stateMachine(void)
 					DEBUG_PRINT(("hora:%d\n", hora));
 
 					hora--;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}else{
 					hora=23;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}
 				
 			}
@@ -306,14 +307,12 @@ void sweep_stateMachine(void)
 				
 				if(minuto <59){
 					minuto++;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}else{
 					minuto = 0;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}
 				
 			}
@@ -321,14 +320,12 @@ void sweep_stateMachine(void)
 				
 				if(minuto >=1){
 					minuto--;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}else{
 					minuto = 59;
-					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d",hora,minuto);
-					lcd_send_string(alarm_str);
+					atualiza_hour_minute_lcd();
+
 				}
 				
 			}
@@ -358,12 +355,12 @@ void sweep_stateMachine(void)
 				if(doses < MAX_DOSES){
 					doses++;
 					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d",hora,minuto,doses);
+					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d     ",hora,minuto,doses);
 					lcd_send_string(alarm_str);
 				}else{
 					doses = MIN_DOSES;
 					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d",hora,minuto,doses);
+					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d     ",hora,minuto,doses);
 					lcd_send_string(alarm_str);
 				}
 			}
@@ -372,12 +369,12 @@ void sweep_stateMachine(void)
 				if(doses>MIN_DOSES){
 					doses--;
 					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d",hora,minuto,doses);
+					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d     ",hora,minuto,doses);
 					lcd_send_string(alarm_str);
 				}else{
 					doses = MAX_DOSES;
 					lcd_put_cur(2, 0);
-					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d",hora,minuto,doses);
+					snprintf(alarm_str, sizeof(alarm_str), "%02d:%02d  doses:%02d     ",hora,minuto,doses);
 					lcd_send_string(alarm_str);
 				}
 			}

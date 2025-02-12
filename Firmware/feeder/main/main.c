@@ -5,7 +5,7 @@
 #include "timer_utils.h"
 #include "nvs_flash.h"
 
-#define DEBUG 1
+//#define DEBUG 0
 
 #include "servo.h"
 #include "defines.h"
@@ -14,20 +14,8 @@
 #include "i2c-lcd.h"
 #include "stateMachine.h"
 
-// Funções apenas para testes de aplicação
-bool bttouch = false;
-void test_touch_buttons(void);
-void test_delay_tick(void);
-void test_move_servo(void);
-void test_servo_and_rtc(void);
-void test_alarme(void);
 void test_state_machine(void);
-
-//volatile bool touch_detected = false;
-
-
 static const char* TAG = "GPTIMER";
-
 
 // Função para varredura dos botões
 void task_sweep_buttons(void *pvParameters) {
@@ -53,22 +41,10 @@ void task_check_alarm(void *pvParameters) {
         num_doses = check_alarm();
         DEBUG_PRINT(("Num doses: %d\n",num_doses));
         alimenta_gato(num_doses); // Precisa chamar a função para alimentar mais que uma dose 
-      
-
-
-
-        // if( num_doses = check_alarm()){
-        //     moveServo(END_POSITION);
-        //     DEBUG_PRINT(("Alimenta gato\n"));
-        //     print_date();
-        //     lastMillis = tickCount;
-        // } else if (TickStampDelta(lastMillis, tickCount) > 1000) {
-        //     moveServo(START_POSITION);
-        //     //DEBUG_PRINT(("Recarrega ração \n"));
-        //    // print_date();
-        // }
-        print_date_lcd(); //Atualiza hora no display a cada 1 segundo
         vTaskDelay(1000 / portTICK_PERIOD_MS);
+        UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(NULL);
+        ESP_LOGI(TAG, "HighWaterMark: %d", highWaterMark);
+
     }
 }
 
@@ -80,28 +56,33 @@ void app_main(void) {
     init_touch();
     init_servo();
 
-    test_state_machine();
-
-    // Criação das tarefas FreeRTOS
-    xTaskCreate(&task_sweep_buttons, "task_sweep_buttons", 2048, NULL, 5, NULL);
-    xTaskCreate(&task_sweep_stateMachine, "task_sweep_stateMachine", 2048, NULL, 5, NULL);
-    xTaskCreate(&task_check_alarm, "task_check_alarm", 2048, NULL, 5, NULL);
-
-    //xTaskCreate(touch_task, "Touch Task", 2048, NULL, 5, NULL);//apenas para teste
-
-
-}
-
-void test_state_machine(void) {
     init_rtc();
     print_date();
     wifi_init();
-    //wifi_init_ap_sta();
 
     ESP_ERROR_CHECK(i2c_master_init());
     print_date();
 
     lcd_init();
+
+    //test_state_machine();
+
+    // Criação das tarefas FreeRTOS
+    xTaskCreate(&task_sweep_buttons, "task_sweep_buttons", 2048, NULL, 5, NULL);
+    xTaskCreate(&task_sweep_stateMachine, "task_sweep_stateMachine", 4096, NULL, 5, NULL);
+    xTaskCreate(&task_check_alarm, "task_check_alarm", 4096, NULL, 5, NULL);
+
+}
+
+void test_state_machine(void) {
+    // init_rtc();
+    // print_date();
+    // wifi_init();
+
+    // ESP_ERROR_CHECK(i2c_master_init());
+    // print_date();
+
+    // lcd_init();
 
 
     DEBUG_PRINT(("MODO DEBUG está ativo!!!.\n"));

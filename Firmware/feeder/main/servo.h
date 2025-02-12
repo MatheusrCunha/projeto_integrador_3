@@ -29,10 +29,4 @@ void configure_ledc_channel(void);
 void init_servo(void);
 void alimenta_gato(int _doses);
 
-
-void initServo();
-void validaServo();
-
-//void touchbt();
-
 #endif /* MAIN_SERVO_H_ */
