@@ -8,20 +8,21 @@
 
 #include "rtc.h"
 #include "defines.h"
+#include "i2c-lcd.h"
 
 #include <sys/time.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 
 struct tm data; // Cria a estrutura que contem as informacoes da data.
-
-
 
 // Estrutura para armazenar os alarmes
 typedef struct {
     bool active;      // Indica se o alarme está ativo
     struct tm time;   // Horário do alarme
+    int doses;        // Quantidade de doses
 } Alarm;
 
 Alarm alarms[MAX_ALARMS]; // Array para armazenar os alarmes
@@ -37,28 +38,29 @@ void init_alarms(void)
 void init_rtc(void)
 {
     set_date(0);// Seta data como 01/01/1970 00:00:00
-    //struct timeval tv;       // Use 'struct' para definir a estrutura
-    //tv.tv_sec = 0; // Atribui um valor à tv_sec
-   // settimeofday(&tv, NULL); // Configura o horário
     init_alarms();
 }
 
 
-
-void set_date(int timeval_sec)
+//Seta a data no RTC pelo valor no formato UNIX e retorna o valor em UNIX ja implementado no RTC.
+long int set_date(int timeval_sec)
 {
     if (timeval_sec < 0) {
         printf("Erro: tempo inválido!\n");
-        return;
+        return -1; // Retorna um valor de erro
     }
-
+    
+    DEBUG_PRINT(("set_date=%d\n",timeval_sec));
+    
     struct timeval tv;       // Use 'struct' para definir a estrutura
     tv.tv_sec = timeval_sec; // Atribui um valor à tv_sec
+    tv.tv_usec = 0;   // Define tv_usec como 0 para não adicionar microssegundos
     settimeofday(&tv, NULL); // Configura o horário
-    
+    time_t current_time = get_time();
+
+    return (long int) current_time;
+
 }
-
-
 
 void print_date(void)
 {
@@ -70,7 +72,9 @@ void print_date(void)
 
     DEBUG_PRINT(("\nUnix Time: %ld\n", (long)tt));         // Mostra na Serial o Unix time.
     DEBUG_PRINT(("Data formatada: %s\n", data_formatada)); // Mostra na Serial a data formatada
+
 }
+
 
 time_t get_time(void)
 {
@@ -100,7 +104,7 @@ void sort_alarms(void)
 
 
 // Função para inserir um novo alarme
-const char* insert_alarm(time_t tt)
+const char* insert_alarm(time_t tt, int _number_doses)
 {
     struct tm alarm_time = *localtime(&tt); // Converte o Unix time para struct tm
 
@@ -122,9 +126,10 @@ const char* insert_alarm(time_t tt)
         if (!alarms[i].active) { // Procura o primeiro slot livre
             alarms[i].time = alarm_time; // Define o horário do alarme
             alarms[i].active = true;     // Ativa o alarme
-            printf("Alarme inserido: %02d:%02d:%02d\n",
-                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec);
-            sort_alarms(); //Ordena cronologicamente os alarmes 
+            alarms[i].doses = _number_doses;
+            printf("Alarme inserido: %02d:%02d:%02d Doses:%02d\n",
+                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec, alarms[i].doses);
+            sort_alarms(); //Ordena cronologicamente os alarmes
             return "Alarme inserido com sucesso";
         }
     }
@@ -135,8 +140,33 @@ const char* insert_alarm(time_t tt)
 }
 
 
+// desabilita alarme e move para ultima posição da fila.
+const char* disable_alarm(int _indice)
+{
+    if (_indice >= MAX_ALARMS) {
+        printf("Indice acima do limite\n");
+        return ("Indice acima do limite"); // 
+    }
 
-bool check_alarm(void)
+    if (count_alarms()==0) { //Confere se ainte tem 
+        printf("Não possui nenhum alarm para excluir\n");
+        return ("Não possui nenhum alarm para excluir"); 
+    }
+
+    int last_alarm = (count_alarms()-1);
+    alarms[_indice]= alarms[last_alarm]; // Define o horário do alarme
+
+    alarms[last_alarm].active = false; // Desabilita o alarme de acordo com o _indice
+    static char mensagem[32]; 
+    sprintf(mensagem, "Alarme %d desabilitado", _indice); // Corrigir o uso do sprintf
+    sort_alarms(); //Ordena cronologicamente os alarmes 
+
+    return mensagem;
+}
+
+
+//Confere se alarm disparou e retorna quantidade de doses
+int check_alarm(void)
 {
     time_t now = time(NULL);
     struct tm current_time = *localtime(&now); // Obtém o horário atual
@@ -146,15 +176,29 @@ bool check_alarm(void)
             alarms[i].time.tm_hour == current_time.tm_hour &&
             alarms[i].time.tm_min == current_time.tm_min &&
             alarms[i].time.tm_sec == current_time.tm_sec) {
-            printf("Alarme disparado: %02d:%02d:%02d\n",
-                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec);
-            return true;
+            DEBUG_PRINT(("Alarme disparado: %02d:%02d:%02d\n",
+                   alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].time.tm_sec));
+            return alarms[i].doses;
 
             // Desativa o alarme após disparar (opcional)
             //alarms[i].active = false;
         }
     }
     return false;
+}
+
+
+int count_alarms(void)
+{
+    int count = 0;
+
+    for (int i = 0; i < MAX_ALARMS; i++) {
+        if (alarms[i].active) {
+            count++;
+        }
+    }
+
+    return count; // Retorna o número de alarmes ativos
 }
 
 
@@ -170,4 +214,41 @@ int get_all_alarms(time_t alarm_list[MAX_ALARMS])
     }
 
     return count; // Retorna o número de alarmes ativos
+}
+
+
+// Retona o alarme na forma de string "_pos-HH:MM" 
+char* get_alarm_format(int _pos)
+{
+    static char alarm_str[20]; // Buffer estático para armazenar o formato HH:MM
+
+    if(_pos >= MAX_ALARMS){
+        DEBUG_PRINT(("Posição de alarme acima do limite"));
+        return "";
+    }
+    else { 
+        snprintf(alarm_str, sizeof(alarm_str), "%d-%02d:%02d", _pos,alarms[_pos].time.tm_hour, alarms[_pos].time.tm_min);
+        return alarm_str;
+    }
+}
+
+
+char* get_all_alarm_format_app(void)
+{
+    static char alarm_str[1024]; // Buffer estático para armazenar o formato HH:MM
+    alarm_str[0] = '\0'; // Inicializa a string vazia
+
+    char temp[40]; // Buffer temporário para cada entrada
+
+    for (size_t i = 0; i < MAX_ALARMS; i++)
+    {
+        if(alarms[i].active){
+            snprintf(temp, sizeof(temp), "%d-%02d:%02d - %d doses,", i, alarms[i].time.tm_hour, alarms[i].time.tm_min, alarms[i].doses);
+            strncat(alarm_str, temp, sizeof(alarm_str) - strlen(alarm_str) - 1); // Concatena o buffer temporário ao buffer principal
+        }
+
+    }
+    DEBUG_PRINT(("%s\n",alarm_str));
+
+    return alarm_str;
 }

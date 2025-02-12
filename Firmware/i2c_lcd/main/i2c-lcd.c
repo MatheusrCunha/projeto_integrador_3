@@ -49,14 +49,25 @@ void lcd_clear (void)
 }
 
 void lcd_put_cur(int row, int col)
+
 {
+	if (row < 0 || row > 3) {
+        ESP_LOGI(TAG, "Linha fora do limite permitido");
+        return; // Sai da função se a linha estiver fora do limite
+    }
     switch (row)
     {
         case 0:
-            col |= 0x80;
+            col |= 0X80; //Endereço primeira linha
             break;
         case 1:
-            col |= 0xC0;
+            col |= 0xC0; //Endereço segunda linha
+            break;
+		case 2:
+			col |= 0X94; //Endereço terceira linha
+            break;
+        case 3:
+            col |= 0XD4; //Endereço quarta linha
             break;
     }
 
@@ -96,3 +107,4 @@ void lcd_send_string (char *str)
 	while (*str) 
 		lcd_send_data (*str++);
 }
+

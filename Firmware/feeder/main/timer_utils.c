@@ -1,12 +1,29 @@
 #include "timer_utils.h"
 #include "esp_log.h"
 
+
+
+
 volatile uint32_t tickCount = 0;
 
+
+static portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 bool IRAM_ATTR onTimer(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx) {
+    portENTER_CRITICAL_ISR(&timerMux);
     tickCount++;
+    portEXIT_CRITICAL_ISR(&timerMux);
     return true; // Reiniciar o alarme
 }
+
+uint32_t get_tickCount(void) {
+    uint32_t ticks;
+    portENTER_CRITICAL(&timerMux);
+    ticks = tickCount;
+    portEXIT_CRITICAL(&timerMux);
+    return ticks;
+}
+
+
 
 void init_timer_1ms() {
     gptimer_handle_t gptimer = NULL;

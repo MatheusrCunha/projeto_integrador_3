@@ -25,8 +25,8 @@
 
 
 
-#define DebounceTicks	5
-#define NUM_BTNS		2
+#define DebounceTicks	15
+#define NUM_BTNS		3
 
 void init_touch(void);
 
@@ -37,7 +37,6 @@ void init_touch(void);
  * @return true se o botão estiver pressionado, false caso contrário.
  */
 bool read_buttons(unsigned char __numTecla);
-
 
 void sweep_buttons(void);
 bool GetButton(unsigned char __tecla);

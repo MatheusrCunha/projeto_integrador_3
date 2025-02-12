@@ -3,153 +3,108 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "timer_utils.h"
+#include "nvs_flash.h"
 
-#define DEBUG 1
+//#define DEBUG 0
 
 #include "servo.h"
-#include "driver_init.h"
 #include "defines.h"
 #include "rtc.h"
 #include "wifi.h"
+#include "i2c-lcd.h"
+#include "stateMachine.h"
 
-//Funções apenas para testes de aplicação
-uint32_t lastMillis = 0;
-bool bttouch = false;
-void test_touch_buttons(void);
-void test_delay_tick(void);
-void test_move_servo(void);
-void test_servo_and_rtc(void);
-void test_alarme(void);
-
-
-
-
+void test_state_machine(void);
 static const char* TAG = "GPTIMER";
 
-extern volatile uint32_t tickCount; // Declaração variável de contagem de ticks (em milisensgundos)
+// Função para varredura dos botões
+void task_sweep_buttons(void *pvParameters) {
+    while (1) {
+        sweep_buttons();
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}
 
-void app_main(void) {
-   
-   
-    esp_log_level_set(TAG, ESP_LOG_INFO);
-    init_timer_1ms(); // Chamada simplificada da função
+// Função para a máquina de estados
+void task_sweep_stateMachine(void *pvParameters) {
+    while (1) {
+        sweep_stateMachine();
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}
 
-    
-
-
-	
-	init_touch(); // Inicializa o touch
-    init_servo(); // Inicializa o timer e pinos do servo
-    
-
-
-    //test_servo_and_rtc();
-    test_alarme();
+// Função para a checagem do alarme
+void task_check_alarm(void *pvParameters) {
+    int num_doses=0; 
 
     while (1) {
-        //Executa função de teste
-        test_touch_buttons();
-        //test_delay_tick();
-        //test_move_servo();
+        num_doses = check_alarm();
+        DEBUG_PRINT(("Num doses: %d\n",num_doses));
+        alimenta_gato(num_doses); // Precisa chamar a função para alimentar mais que uma dose 
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(NULL);
+        ESP_LOGI(TAG, "HighWaterMark: %d", highWaterMark);
 
     }
 }
 
-void test_alarme(void){
 
-    
+
+void app_main(void) {
+    esp_log_level_set(TAG, ESP_LOG_INFO);
+    init_timer_1ms();
+    init_touch();
+    init_servo();
+
     init_rtc();
-    wifi_init();
     print_date();
-    DEBUG_PRINT(("Este é um print em modo de DEBUG.\n"));
+    wifi_init();
 
-    for (size_t i = 0; i < 5; i++)
-    {
-        DEBUG_PRINT(("Retorno de inserção alarme: %s\n", insert_alarm(get_time() + (10*i))));
-      //  printf("Retorno de inserção alarme: %s\n", insert_alarm(get_time() + (10*i))); // Não deve permitir inserir mais que um alarme por minuto
+    ESP_ERROR_CHECK(i2c_master_init());
+    print_date();
+
+    lcd_init();
+
+    //test_state_machine();
+
+    // Criação das tarefas FreeRTOS
+    xTaskCreate(&task_sweep_buttons, "task_sweep_buttons", 2048, NULL, 5, NULL);
+    xTaskCreate(&task_sweep_stateMachine, "task_sweep_stateMachine", 4096, NULL, 5, NULL);
+    xTaskCreate(&task_check_alarm, "task_check_alarm", 4096, NULL, 5, NULL);
+
+}
+
+void test_state_machine(void) {
+    // init_rtc();
+    // print_date();
+    // wifi_init();
+
+    // ESP_ERROR_CHECK(i2c_master_init());
+    // print_date();
+
+    // lcd_init();
+
+
+    DEBUG_PRINT(("MODO DEBUG está ativo!!!.\n"));
+
+    for (size_t i = 0; i < 8; i++) {
+        DEBUG_PRINT(("Retorno de inserção alarme: %s\n", insert_alarm( get_time() + (20*i),2)));
     }
-    
+
     time_t alarm_list[MAX_ALARMS];
     int alarm_count = get_all_alarms(alarm_list);
 
-
     if (alarm_count == 0) {
-        //TODO  //Responde para o aplicativo "Nenhum alarme programado.\n"
         printf("Nenhum alarme programado.\n");
     } else {
-        //TODO // //Responde para o aplicativo "Lista de alarmes programados:\n"
         printf("Lista de alarmes programados:\n");
         for (int i = 0; i < alarm_count; i++) {
             struct tm *alarm_time = localtime(&alarm_list[i]);
-            printf("Alarme %d: %02d:%02d:%02d\n", 
-                   i + 1, 
-                   alarm_time->tm_hour, 
+            printf("Alarme %d: %02d:%02d:%02d\n",
+                   i + 1,
+                   alarm_time->tm_hour,
                    alarm_time->tm_min,
                    alarm_time->tm_sec);
         }
     }
-    
-
-    while (1) {
-        print_date();
-        check_alarm(); // Precisa aguarda 1 segundo para ser chamado a função de novo
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-
-
-}
-
-
-void test_servo_and_rtc(void){
-
-    init_rtc();
-
-    while (1) {
-        print_date();
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-
-
-}
-
-void test_touch_buttons(void) {
-    sweep_buttons();
-    vTaskDelay(10 / portTICK_PERIOD_MS);
-
-    if (GetButton(btn_D13)) {
-        printf("Botão D13 pressionado\n");
-    }
-    if (GetButton(btn_D14)) {
-        printf("Botão D14 pressionado\n");
-    }
-}
-
-void test_delay_tick(void) {
-
-    if (TickStampDelta(lastMillis, tickCount) > 1000) {
-        lastMillis = tickCount;
-        ESP_LOGI(TAG, "Executando a cada 1000 ms");
-        
-    }
-    vTaskDelay(10 / portTICK_PERIOD_MS);
-}
-
-void test_move_servo(void) {  // Teste de leitura do botão para movimentar o servo
-
-        sweep_buttons();
-        bttouch = GetButton(btn_init);
-		if (bttouch == 1)
-		{
-			moveServo(END_POSITION);
-            printf("Alimenta gato\n");
-            lastMillis = tickCount;
-    
-		}else if (TickStampDelta(lastMillis, tickCount) > 1000)
-        {
-            moveServo(START_POSITION);
-            printf("Recarrega ração \n");
-        }
-        
-		vTaskDelay(10 / portTICK_PERIOD_MS);
-
 }

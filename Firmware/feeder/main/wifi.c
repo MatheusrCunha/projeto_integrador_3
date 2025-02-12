@@ -12,41 +12,100 @@
 #include "lwip/sys.h"
 #include "wifi.h"
 #include "rtc.h"
+#include "defines.h"
 
-#define EXAMPLE_ESP_WIFI_SSID      "esp_cunha"
+
+#define EXAMPLE_ESP_WIFI_SSID      "Alimentador de Gatos"
 #define EXAMPLE_ESP_WIFI_PASS      "12345678"
 #define EXAMPLE_ESP_WIFI_CHANNEL   6
 #define EXAMPLE_MAX_STA_CONN       4
 
 static const char *TAG = "wifi softAP";
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 
 // Função para lidar com a requisição POST /message
 esp_err_t message_post_handler(httpd_req_t *req) {
     char buf[100];
-    if (req->content_len > sizeof(buf)) {
+    if (req->content_len > sizeof(buf) - 1) {
         httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Message too large");
         return ESP_FAIL;
     }
 
     int ret, remaining = req->content_len;
     while (remaining > 0) {
-        if ((ret = httpd_req_recv(req, buf, MIN(remaining, sizeof(buf)))) <= 0) {
+        if ((ret = httpd_req_recv(req, buf, MIN(remaining, sizeof(buf) - 1))) <= 0) {
             if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
                 continue;
             }
             return ESP_FAIL;
         }
         remaining -= ret;
-        buf[ret] = 0;
+        buf[ret] = '\0'; // Certifique-se de que a string seja terminada com null
         ESP_LOGI(TAG, "Received message: %s", buf);
+
+        char *token;
+        char *key;
+        char *value_str;
+        int value;
+        int timer_value = 0;
+
+
+        char *rest = buf;
+        while ((token = strtok_r(rest, ",", &rest))) {
+            // Remover espaços extras ao redor de token
+            while (isspace((unsigned char)*token)) token++;
+            char *end = token + strlen(token) - 1;
+            while (end > token && isspace((unsigned char)*end)) end--;
+            end[1] = '\0';
+
+            key = strtok(token, "=");
+            value_str = strtok(NULL, "=");
+
+            if (key != NULL && value_str != NULL) {
+                while (isspace((unsigned char)*value_str)) value_str++;
+                end = value_str + strlen(value_str) - 1;
+                while (end > value_str && isspace((unsigned char)*end)) end--;
+                end[1] = '\0';
+
+
+                sscanf(value_str, "%d", &value);
+                if (strcmp(key, "Timer") == 0) {
+                    timer_value = value;
+                  //  char result[10];
+                  //  snprintf(result, sizeof(result), "%d",timer_value);
+                
+                    ESP_LOGI(TAG, "Timer value: %d", timer_value);
+                } else if (strcmp(key, "Remove_timer") == 0) {
+                    int remove_timer_value = value;
+                    const char *result = disable_alarm(remove_timer_value);
+                    ESP_LOGI(TAG, "Remove_timer: %s", result);
+                } else if (strcmp(key, "doses") == 0) {
+                    int doses_value = value;
+                    const char *result = insert_alarm(timer_value, doses_value);
+                    ESP_LOGI(TAG, "Doses value: %s", result);
+                } else if (strcmp(key, "SetHour") == 0) {
+                    int set_hour_value = value;
+                    long int unix_time = set_date(set_hour_value);
+                    ESP_LOGI(TAG, "SetHour value: %ld", unix_time);
+                } else {
+                    ESP_LOGW(TAG, "Unknown command: %s", key);
+                }
+            } else {
+                ESP_LOGE(TAG, "Invalid token: %s", token);
+            }
+        }
+
+        print_date();
     }
 
     httpd_resp_send(req, "Message received", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
 
+
+
+int incrementa = 0;
 // Função para lidar com a requisição GET /message
 esp_err_t message_get_handler(httpd_req_t *req) {
     char*  buf;
@@ -68,6 +127,7 @@ esp_err_t message_get_handler(httpd_req_t *req) {
             }
                 if (httpd_query_key_value(buf, "hora", param, sizeof(param)) == ESP_OK) {
                 ESP_LOGI(TAG, "Hora em Unix: %s", param);
+               // httpd_resp_send(req, get_alarm_format(0), HTTPD_RESP_USE_STRLEN);
                 httpd_resp_send(req, "Unix Received", HTTPD_RESP_USE_STRLEN);
                 set_date(atoi(param));
                 print_date();
@@ -77,9 +137,20 @@ esp_err_t message_get_handler(httpd_req_t *req) {
         }
         free(buf);
     }
+    if(incrementa==1){
+   // if(incrementa==count_alarms()){
+        incrementa=0;
+        httpd_resp_send(req, "", HTTPD_RESP_USE_STRLEN); //Responde string em branco para Aplicativo entender que não tem mais comando
+        DEBUG_PRINT(("Incrementa:%d\n",incrementa));
+    }else{
+        httpd_resp_send(req, get_all_alarm_format_app() , HTTPD_RESP_USE_STRLEN);
 
-    httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "No message found");
-    return ESP_FAIL;
+       // httpd_resp_send(req, get_alarm_format(incrementa), HTTPD_RESP_USE_STRLEN);
+        incrementa++;
+        DEBUG_PRINT(("Incrementa++:%d\n",incrementa));
+    }
+    //httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "No message found");
+    return ESP_OK;
 }
 
 // Função para lidar com a requisição GET /

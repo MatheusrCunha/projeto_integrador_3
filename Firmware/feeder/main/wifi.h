@@ -11,6 +11,4 @@
 void wifi_init(void);
 
 
-
-
 #endif /* _WIFI */
